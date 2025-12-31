@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Υπολογιστής Επένδυσης Ακινήτου (Ελλάδα) | ROI • Φόροι • Δάνειο</title>
+  <meta name="description" content="Δωρεάν υπολογιστής επένδυσης ακινήτου για Ελλάδα. ROI, καθαρό ενοίκιο μετά φόρου, δάνειο, τόκοι και cashflow μετά δόσης." />
+  <meta name="robots" content="index, follow" />
+
+  <style>
+    :root {
+      --bg: #f7f7f8;
+      --card: #ffffff;
+      --text: #111;
+      --muted: #666;
+      --primary: #1a73e8;
+      --border: #e7e7e7;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 1.5rem 1rem 0.5rem;
+      text-align: center;
+    }
+
+    header h1 { margin: 0 0 0.5rem; font-size: 1.7rem; }
+    header p  { margin: 0; color: var(--muted); }
+
+    /* ===== Layout with side ads ===== */
+    main.layout {
+      max-width: 1200px;
+      margin: 1rem auto 3rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 160px 1fr 160px;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .center-col { min-width: 0; }
+
+    .side-ad {
+      position: sticky;
+      top: 1rem;
+      height: fit-content;
+    }
+
+    @media (max-width: 1100px) {
+      main.layout { grid-template-columns: 1fr; }
+      .side-ad { display: none; }
+    }
+
+    /* ===== Cards / forms ===== */
+    .ad {
+      margin: 0 0 1rem;
+      padding: 0.75rem;
+      border: 1px dashed var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      background: #fafafa;
+      border-radius: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      font-weight: 650;
+      margin-bottom: 0.25rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 750;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+    }
+    button:hover { opacity: 0.95; }
+
+    /* ===== Results ===== */
+    .results { display: none; }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.45rem 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.98rem;
+    }
+    .row:last-child { border-bottom: none; }
+
+    .row span { color: #222; }
+    .row strong { font-weight: 800; white-space: nowrap; }
+
+    .section-title {
+      margin: 0 0 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    hr.sep {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 0.9rem 0;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      padding: 1.5rem 1rem;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>Υπολογιστής Επένδυσης Ακινήτου (Ελλάδα)</h1>
+  <p>ROI • Καθαρό ενοίκιο μετά φόρου • Δάνειο • Cashflow μετά δόσης</p>
+</header>
+
+<main class="layout">
+
+  <!-- LEFT SIDE AD -->
+  <aside class="ad side-ad" aria-label="Left ad slot">Side Ad</aside>
+
+  <!-- CENTER CONTENT -->
+  <div class="center-col">
+
+    <!-- TOP AD -->
+    <div class="ad" aria-label="Top ad slot">Ad slot</div>
+
+    <div class="card">
+      <form id="calc-form">
+        <div class="grid">
+
+          <div>
+            <label>1) Διαθέσιμα Μετρητά (€)</label>
+            <input id="cash" type="number" inputmode="decimal" placeholder="π.χ. 40000">
+            <div class="hint">Πόσα χρήματα έχεις διαθέσιμα χωρίς δάνειο.</div>
+          </div>
+
+          <div>
+            <label>2) Αξία Ακινήτου (€)</label>
+            <input id="price" type="number" inputmode="decimal" placeholder="π.χ. 200000">
+            <div class="hint">Η τιμή αγοράς / ζητούμενη τιμή.</div>
+          </div>
+
+          <div>
+            <label>3) Κόστος Ανακαίνισης (€)</label>
+            <input id="refurb" type="number" inputmode="decimal" placeholder="π.χ. 15000">
+          </div>
+
+          <div>
+            <label>4) Μηνιαίο Ενοίκιο (μικτό) (€)</label>
+            <input id="rent" type="number" inputmode="decimal" placeholder="π.χ. 900">
+            <div class="hint">Πριν φόρο.</div>
+          </div>
+
+          <div>
+            <label>5) Άλλα Μηνιαία Ενοίκια (€)</label>
+            <input id="otherRent" type="number" inputmode="decimal" placeholder="π.χ. 300" value="0">
+            <div class="hint">Χρησιμοποιούνται για το κλιμάκιο φόρου.</div>
+          </div>
+
+          <div>
+            <label>6) Επιτόκιο Δανείου (% ετησίως)</label>
+            <input id="interest" type="number" inputmode="decimal" value="4" step="0.01">
+          </div>
+
+          <div>
+            <label>7) Έτη Δανείου</label>
+            <input id="years" type="number" inputmode="numeric" value="15" step="1">
+          </div>
+
+        </div>
+
+        <button type="button" id="calcBtn">Υπολογισμός</button>
+
+        <div class="hint" style="margin-top:0.75rem;">
+          Υπόθεση: Έξοδα αγοραστή = <strong>9%</strong> επί της αξίας ακινήτου. Φόρος ενοικίων: 15% έως 12k, 35% έως 35k, 45% πάνω από 35k (ετήσια).
+        </div>
+      </form>
+    </div>
+
+    <!-- MIDDLE AD -->
+    <div class="ad" aria-label="Middle ad slot">Ad slot</div>
+
+    <div id="results" class="card results">
+      <h3 class="section-title">Αποτελέσματα</h3>
+
+      <div class="row"><span>Συνολική Αρχική Επένδυση</span><strong id="totalInv"></strong></div>
+      <div class="row"><span>Απαιτούμενο Δάνειο</span><strong id="loan"></strong></div>
+      <div class="row"><span>Μηνιαία Δόση Δανείου</span><strong id="monthly"></strong></div>
+      <div class="row"><span>Συνολικοί Τόκοι (έως λήξη)</span><strong id="interestTotal"></strong></div>
+
+      <hr class="sep">
+
+      <div class="row"><span>Καθαρό Μηνιαίο Ενοίκιο (μετά φόρου)</span><strong id="netRent"></strong></div>
+      <div class="row"><span>Μηνιαίο Cashflow (μετά δόσης)</span><strong id="cashflow"></strong></div>
+
+      <hr class="sep">
+
+      <div class="row"><span>ROI (ετήσιο, πριν δάνειο)</span><strong id="roiYear"></strong></div>
+      <div class="row"><span>ROI (ετήσιο, μετά δόσης)</span><strong id="roiYearAfterLoan"></strong></div>
+    </div>
+
+    <!-- BOTTOM AD -->
+    <div class="ad" aria-label="Bottom ad slot">Ad slot</div>
+
+  </div>
+
+  <!-- RIGHT SIDE AD -->
+  <aside class="ad side-ad" aria-label="Right ad slot">Side Ad</aside>
+
+</main>
+
+<footer>
+  © 2025 • Εκπαιδευτικός υπολογιστής • Όχι οικονομική/φορολογική συμβουλή
+</footer>
+
+<script>
+  // ---------- Formatting ----------
+  function euro(n) {
+    // Intl will show negative amounts with a minus sign automatically
+    return new Intl.NumberFormat('el-GR', { style: 'currency', currency: 'EUR' }).format(n);
+  }
+
+  // Excel-like PMT (positive monthly payment)
+  function pmt(rate, n, pv) {
+    if (pv <= 0 || n <= 0) return 0;
+    if (rate === 0) return pv / n;
+    return (rate * pv) / (1 - Math.pow(1 + rate, -n));
+  }
+
+  // Rental tax (annual) - Greece brackets provided by you
+  function taxAnnual(income) {
+    if (income <= 0) return 0;
+    if (income <= 12000) return income * 0.15;
+    if (income <= 35000) return 12000 * 0.15 + (income - 12000) * 0.35;
+    return 12000 * 0.15 + (35000 - 12000) * 0.35 + (income - 35000) * 0.45;
+  }
+
+  // ---------- Main calculation ----------
+  function calculate() {
+    const cash = +document.getElementById('cash').value || 0;
+    const price = +document.getElementById('price').value || 0;
+    const refurb = +document.getElementById('refurb').value || 0;
+    const rentGross = +document.getElementById('rent').value || 0;
+    const otherRent = +document.getElementById('otherRent').value || 0;
+    const interestAnnualPct = +document.getElementById('interest').value || 0;
+    const years = +document.getElementById('years').value || 0;
+
+    // Buyer expenses: 9% on property price
+    const buyersExpenses = price * 0.09;
+
+    // Total initial investment
+    const totalInv = price + refurb + buyersExpenses;
+
+    // Loan needed (if cash is less than total investment)
+    const loan = Math.max(0, totalInv - cash);
+
+    // Loan monthly payment & total interest
+    const monthlyRate = (interestAnnualPct / 100) / 12;
+    const nPayments = Math.round(years * 12);
+    const monthlyPayment = loan > 0 ? pmt(monthlyRate, nPayments, loan) : 0;
+    const totalInterest = loan > 0 ? (monthlyPayment * nPayments - loan) : 0;
+
+    // Tax: you requested brackets apply to total annual rental income (this + other properties)
+    const totalAnnualGross = (rentGross + otherRent) * 12;
+    const annualTaxTotal = taxAnnual(totalAnnualGross);
+    const effectiveTaxRate = totalAnnualGross > 0 ? (annualTaxTotal / totalAnnualGross) : 0;
+
+    // Net rent for THIS property using effective rate
+    const netMonthlyRent = rentGross * (1 - effectiveTaxRate);
+
+    // Cashflow after loan payment (can be negative)
+    const cashflow = netMonthlyRent - monthlyPayment;
+
+    // ROI before loan payment (based on net rent only)
+    const roiYear = totalInv > 0 ? ((netMonthlyRent * 12) / totalInv) * 100 : 0;
+
+    // ROI after loan payment (based on cashflow)
+    const roiYearAfterLoan = totalInv > 0 ? ((cashflow * 12) / totalInv) * 100 : 0;
+
+    // Render
+    document.getElementById('totalInv').textContent = euro(totalInv);
+    document.getElementById('loan').textContent = euro(loan);
+    document.getElementById('monthly').textContent = euro(monthlyPayment);
+    document.getElementById('interestTotal').textContent = euro(totalInterest);
+
+    document.getElementById('netRent').textContent = euro(netMonthlyRent);
+    document.getElementById('cashflow').textContent = euro(cashflow);
+
+    document.getElementById('roiYear').textContent = roiYear.toFixed(2) + '%';
+    document.getElementById('roiYearAfterLoan').textContent = roiYearAfterLoan.toFixed(2) + '%';
+
+    document.getElementById('results').style.display = 'block';
+  }
+
+  // Hook button + Enter
+  document.getElementById('calcBtn').addEventListener('click', calculate);
+  document.getElementById('calc-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    calculate();
+  });
+</script>
+
+</body>
+</html>
